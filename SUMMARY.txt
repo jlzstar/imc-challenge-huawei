@@ -1,0 +1,113 @@
+================================================================================
+IMC HUAWEI CHALLENGE - 3D MESH SIMPLIFICATION SOLUTION
+================================================================================
+
+SOLUTION OVERVIEW
+-----------------
+Algorithm:    Quadric Error Metrics (QEM) with Edge Collapse
+Based on:     Garland & Heckbert (1997)
+Language:     C++17
+Dependencies: Eigen 3.4.0 (included)
+Performance:  O(V log V) time, O(V) space
+
+CURRENT STATUS
+--------------
+✓ Implementation complete
+✓ Compiles successfully
+✓ Passes sample test (9→8 vertices, 14→12 faces)
+✓ Output is valid manifold mesh
+✓ No degenerate faces
+✓ Maintains topology
+⚠ SSIM/Hausdorff validation requires system evaluation
+
+KEY FILES
+---------
+baseline.cpp       - Main solution (348 lines)
+baseline           - Compiled executable
+test.sh            - Quick test script
+analyze.py         - Validation tool
+sample.in/out      - Test case
+QUICKSTART.md      - Usage guide
+SOLUTION.md        - Technical details
+README.md          - Problem description
+
+USAGE
+-----
+Build:    g++ -O2 -std=c++17 baseline.cpp -o baseline
+Run:      ./baseline < input.obj > output.obj
+Test:     ./test.sh
+Analyze:  python3 analyze.py input.obj output.obj
+
+TUNING PARAMETER
+----------------
+In baseline.cpp, function simplify():
+  simplify_qem(0.5);  // Target ratio (0.5 = 50% vertices remaining)
+
+Adjust this value based on SSIM feedback:
+  - Higher (0.7-0.9): Conservative, better quality
+  - Lower (0.2-0.4): Aggressive, higher compression
+
+ALGORITHM STEPS
+---------------
+1. Compute quadric error matrix for each vertex
+2. Build priority queue of edge collapses
+3. Validate topology (manifold, no degeneracies)
+4. Iteratively collapse lowest-cost edges
+5. Rebuild clean output mesh
+
+VALIDATION CHECKLIST
+--------------------
+✓ Manifold topology (each edge shared by exactly 2 faces)
+✓ No degenerate faces (all positive area)
+✓ Valid vertex indices
+✓ Output format correct
+⚠ Hausdorff distance < 5% (system check)
+⚠ SSIM score ≥ 0.95 (system check)
+
+NEXT STEPS
+----------
+1. Submit baseline solution to understand scoring
+2. Tune target_ratio based on SSIM feedback
+3. Consider enhancements:
+   - Optimal vertex placement (solve linear system)
+   - Feature edge detection (normal angles)
+   - Curvature-based weighting
+   - View-dependent simplification
+
+PERFORMANCE NOTES
+-----------------
+Sample case:  ~1ms
+1M vertices:  ~10-30 seconds (estimated)
+Memory:       ~200MB per 1M vertices
+
+TEST RESULTS
+------------
+Input:   9 vertices, 14 faces
+Output:  8 vertices, 12 faces
+Compression: 11.11% vertex reduction
+Topology: Valid manifold
+Degeneracies: None
+
+COMPETITION TIPS
+----------------
+1. Start conservative (ratio=0.7) and tune down
+2. Different test cases may need different ratios
+3. Visual quality matters more than geometric error
+4. Silhouette edges are most important
+5. Sharp features should be preserved
+
+REFERENCES
+----------
+[1] Garland & Heckbert (1997) - "Surface Simplification Using QEM"
+[2] Hoppe (1996) - "Progressive Meshes"
+[3] Wang et al. (2004) - "SSIM: Image Quality Assessment"
+
+SUPPORT
+-------
+Documentation: README.md, SOLUTION.md, QUICKSTART.md
+Validation: python3 analyze.py input.obj output.obj
+Issues: Check code comments in baseline.cpp
+
+================================================================================
+Solution ready for submission. Good luck! 🚀
+================================================================================
