@@ -1,4 +1,4 @@
-# IMC Challenge: Perception-Aware Mesh Simplification
+# IMC Challenge Attempt: Perception-Aware Mesh Simplification
 
 ## Problem Overview
 
